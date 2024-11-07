@@ -34,7 +34,7 @@ func callbackHelp() {
 	fmt.Println("")
 
 	for _, val := range c {
-		fmt.Printf("%s - %s\n", val.name, val.description)
+		fmt.Printf("%s: %s\n", val.name, val.description)
 	}
 
 }
