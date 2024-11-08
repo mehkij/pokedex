@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 )
 
 func startRepl(cnfg *config) {
@@ -14,11 +15,13 @@ func startRepl(cnfg *config) {
 		scanner.Scan()
 		text := scanner.Text()
 
+		slice := strings.Fields(text)
+
 		c := getCommands()
 		_, ok := c[text]
 
 		if ok {
-			c[text].callback(cnfg)
+			c[slice[0]].callback(cnfg, slice[1:])
 		} else {
 			fmt.Println("error: unknown command")
 		}

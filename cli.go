@@ -11,7 +11,7 @@ import (
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*config) error
+	callback    func(*config, []string) error
 }
 
 type config struct {
@@ -46,7 +46,7 @@ func getCommands() map[string]cliCommand {
 	}
 }
 
-func callbackHelp(config *config) error {
+func callbackHelp(config *config, params []string) error {
 	c := getCommands()
 
 	fmt.Println("Welcome to the Pokedex!")
@@ -61,12 +61,12 @@ func callbackHelp(config *config) error {
 
 }
 
-func callbackExit(config *config) error {
+func callbackExit(config *config, params []string) error {
 	os.Exit(0)
 	return nil
 }
 
-func callbackMap(config *config) error {
+func callbackMap(config *config, params []string) error {
 	// Guards against empty config
 	if config.nextAreaURL == nil && config.prevAreaURL != nil {
 		fmt.Println("You are on the last page!")
@@ -89,7 +89,7 @@ func callbackMap(config *config) error {
 	return nil
 }
 
-func callbackMapb(config *config) error {
+func callbackMapb(config *config, params []string) error {
 	if config.prevAreaURL == nil {
 		fmt.Println("You are on the first page!")
 		return nil
