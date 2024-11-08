@@ -65,6 +65,11 @@ func callbackExit(config *config) error {
 }
 
 func callbackMap(config *config) error {
+	if config.nextAreaURL == nil {
+		fmt.Println("You are on the last page!")
+		return nil
+	}
+
 	res, err := config.pokeapiClient.ListLocationAreas(config.nextAreaURL)
 
 	if err != nil {
