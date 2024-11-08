@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/mehkij/pokedex/internal/pokeapi"
+	"github.com/mehkij/pokedex/internal/pokecache"
 )
 
 type cliCommand struct {
@@ -17,6 +18,7 @@ type config struct {
 	pokeapiClient pokeapi.Client
 	nextAreaURL   *string
 	prevAreaURL   *string
+	pokeCache     pokecache.Cache
 }
 
 func getCommands() map[string]cliCommand {
@@ -65,12 +67,13 @@ func callbackExit(config *config) error {
 }
 
 func callbackMap(config *config) error {
-	if config.nextAreaURL == nil {
+	// Guards against empty config
+	if config.nextAreaURL == nil && config.prevAreaURL != nil {
 		fmt.Println("You are on the last page!")
 		return nil
 	}
 
-	res, err := config.pokeapiClient.ListLocationAreas(config.nextAreaURL)
+	res, err := config.pokeapiClient.ListLocationAreas(config.pokeCache, config.nextAreaURL)
 
 	if err != nil {
 		return err
@@ -92,7 +95,7 @@ func callbackMapb(config *config) error {
 		return nil
 	}
 
-	res, err := config.pokeapiClient.ListLocationAreas(config.prevAreaURL)
+	res, err := config.pokeapiClient.ListLocationAreas(config.pokeCache, config.prevAreaURL)
 
 	if err != nil {
 		return err

@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+
+	"github.com/mehkij/pokedex/internal/pokecache"
 )
 
-func (c *Client) ListLocationAreas(URL *string) (LocationAreasRes, error) {
+func (c *Client) ListLocationAreas(cache pokecache.Cache, URL *string) (LocationAreasRes, error) {
 	var fullURL string
 	endpoint := "/location-area"
 
@@ -15,6 +17,16 @@ func (c *Client) ListLocationAreas(URL *string) (LocationAreasRes, error) {
 		fullURL = *URL
 	} else {
 		fullURL = baseURL + endpoint
+	}
+
+	val, ok := cache.Get(fullURL)
+
+	if ok {
+		var cachedResponse LocationAreasRes
+
+		e := json.Unmarshal(val, &cachedResponse)
+
+		return cachedResponse, e
 	}
 
 	req, err := http.NewRequest("GET", fullURL, nil)
@@ -43,6 +55,8 @@ func (c *Client) ListLocationAreas(URL *string) (LocationAreasRes, error) {
 
 	var response LocationAreasRes
 	e := json.Unmarshal(data, &response)
+
+	cache.Add(fullURL, data)
 
 	return response, e
 }
