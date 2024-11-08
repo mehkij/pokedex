@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func startRepl() {
+func startRepl(cnfg *config) {
 	for {
 		scanner := bufio.NewScanner(os.Stdin)
 
@@ -18,7 +18,7 @@ func startRepl() {
 		_, ok := c[text]
 
 		if ok {
-			c[text].callback()
+			c[text].callback(cnfg)
 		} else {
 			fmt.Println("error: unknown command")
 		}
