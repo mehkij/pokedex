@@ -69,7 +69,20 @@ func getCommands() map[string]cliCommand {
 }
 
 func callbackHelp(config *config, params []string) error {
+
 	c := getCommands()
+
+	if len(params) > 1 {
+		_, ok := c[params[1]]
+		if ok {
+			fmt.Println("Usage:")
+			fmt.Printf("%s: %s\n", c[params[1]].name, c[params[1]].description)
+			return nil
+		} else {
+			fmt.Println("unknown command")
+			return nil
+		}
+	}
 
 	fmt.Println("Welcome to the Pokedex!")
 	fmt.Println("Usage:")
@@ -80,7 +93,6 @@ func callbackHelp(config *config, params []string) error {
 	}
 
 	return nil
-
 }
 
 func callbackExit(config *config, params []string) error {
