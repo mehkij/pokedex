@@ -84,11 +84,21 @@ func callbackHelp(config *config, params []string) error {
 }
 
 func callbackExit(config *config, params []string) error {
+	if len(params) > 1 {
+		fmt.Println("too many arguments")
+		return nil
+	}
+
 	os.Exit(0)
 	return nil
 }
 
 func callbackMap(config *config, params []string) error {
+	if len(params) > 1 {
+		fmt.Println("too many arguments")
+		return nil
+	}
+
 	// Guards against empty config
 	if config.nextAreaURL == nil && config.prevAreaURL != nil {
 		fmt.Println("You are on the last page!")
@@ -112,6 +122,11 @@ func callbackMap(config *config, params []string) error {
 }
 
 func callbackMapb(config *config, params []string) error {
+	if len(params) > 1 {
+		fmt.Println("too many arguments")
+		return nil
+	}
+
 	if config.prevAreaURL == nil {
 		fmt.Println("You are on the first page!")
 		return nil
