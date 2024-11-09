@@ -55,6 +55,11 @@ func getCommands() map[string]cliCommand {
 			description: "Attempt to catch a given Pokemon",
 			callback:    callbackCatch,
 		},
+		"inspect": {
+			name:        "inspect",
+			description: "Inspect a Pokemon you have caught previously",
+			callback:    callbackInspect,
+		},
 	}
 }
 
@@ -182,6 +187,31 @@ func callbackCatch(config *config, params []string) error {
 		config.pokedex[res.Name] = res
 	} else {
 		fmt.Printf("Drats! The %v got away!\n", res.Name)
+	}
+
+	return nil
+}
+
+func callbackInspect(config *config, params []string) error {
+	if len(params) == 1 {
+		fmt.Println("not enough arguments")
+		return nil
+	}
+
+	pokemon, ok := config.pokedex[params[1]]
+
+	if ok {
+		fmt.Printf("Name: %s\nHeight: %d\nWeight: %d\n", pokemon.Name, pokemon.Height, pokemon.Weight)
+		fmt.Println("Stats:")
+		for _, stat := range pokemon.Stats {
+			fmt.Printf("- %s: %v\n", stat.Stat.Name, stat.BaseStat)
+		}
+		fmt.Println("Types:")
+		for _, t := range pokemon.Types {
+			fmt.Printf("- %s\n", t.Type.Name)
+		}
+	} else {
+		fmt.Println("You have not caught this Pokemon yet!")
 	}
 
 	return nil
