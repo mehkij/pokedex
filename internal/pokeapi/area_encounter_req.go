@@ -12,6 +12,7 @@ import (
 func (c *Client) ListPokemonEncounters(cache pokecache.Cache, URL *string) (AreaEncounterRes, error) {
 	val, ok := cache.Get(*URL)
 
+	// If the data already exists in the cache, use it instead of fetch
 	if ok {
 		var cachedResponse AreaEncounterRes
 

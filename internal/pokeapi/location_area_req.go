@@ -21,6 +21,7 @@ func (c *Client) ListLocationAreas(cache pokecache.Cache, URL *string) (Location
 
 	val, ok := cache.Get(fullURL)
 
+	// If the data already exists in the cache, use it instead of fetch
 	if ok {
 		var cachedResponse LocationAreasRes
 

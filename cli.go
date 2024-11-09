@@ -117,11 +117,13 @@ func callbackMapb(config *config, params []string) error {
 }
 
 func callbackExplore(config *config, params []string) error {
+	// If len == 1, user only passed command name with no arguments
 	if len(params) == 1 {
 		fmt.Println("not enough arguments")
 		return nil
 	}
 
+	// params[0] is always the name of the command
 	URL := fmt.Sprintf("https://pokeapi.co/api/v2/location-area/%s/", params[1])
 
 	res, err := config.pokeapiClient.ListPokemonEncounters(config.pokeCache, &URL)
