@@ -175,6 +175,8 @@ func callbackCatch(config *config, params []string) error {
 		return err
 	}
 
+	fmt.Printf("Throwing a Pokeball at %v...\n", res.Name)
+
 	if rand.Float64()*float64(res.BaseExperience) > float64(res.BaseExperience)/2 {
 		fmt.Printf("You caught %v!\n", res.Name)
 		config.pokedex[res.Name] = res
