@@ -85,7 +85,7 @@ func callbackMap(config *config, params []string) error {
 	}
 
 	for _, location := range res.Results {
-		fmt.Println(location.Name)
+		fmt.Println("- ", location.Name)
 	}
 
 	config.nextAreaURL = res.Next
@@ -107,7 +107,7 @@ func callbackMapb(config *config, params []string) error {
 	}
 
 	for _, location := range res.Results {
-		fmt.Println(location.Name)
+		fmt.Println("- ", location.Name)
 	}
 
 	config.nextAreaURL = res.Next
@@ -136,8 +136,9 @@ func callbackExplore(config *config, params []string) error {
 		return nil
 	}
 
+	fmt.Println("Found Pokemon:")
 	for _, encounter := range res.PokemonEncounters {
-		fmt.Println(encounter.Pokemon.Name)
+		fmt.Println("- ", encounter.Pokemon.Name)
 	}
 
 	return nil
