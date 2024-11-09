@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
 
 	"github.com/mehkij/pokedex/internal/pokeapi"
@@ -19,6 +20,7 @@ type config struct {
 	nextAreaURL   *string
 	prevAreaURL   *string
 	pokeCache     pokecache.Cache
+	pokedex       map[string]pokeapi.PokemonRes
 }
 
 func getCommands() map[string]cliCommand {
@@ -47,6 +49,11 @@ func getCommands() map[string]cliCommand {
 			name:        "explore",
 			description: "Displays the available Pokemon in the given area",
 			callback:    callbackExplore,
+		},
+		"catch": {
+			name:        "catch",
+			description: "Attempt to catch a given Pokemon",
+			callback:    callbackCatch,
 		},
 	}
 }
@@ -141,6 +148,38 @@ func callbackExplore(config *config, params []string) error {
 	fmt.Println("Found Pokemon:")
 	for _, encounter := range res.PokemonEncounters {
 		fmt.Println("- ", encounter.Pokemon.Name)
+	}
+
+	return nil
+}
+
+func callbackCatch(config *config, params []string) error {
+	if len(params) == 1 {
+		fmt.Println("not enough arguments")
+		return nil
+	}
+
+	_, ok := config.pokedex[params[1]]
+
+	if ok {
+		fmt.Printf("You already have %s!\n", params[1])
+		return nil
+	}
+
+	// params[0] is always the name of the command
+	URL := fmt.Sprintf("https://pokeapi.co/api/v2/pokemon/%s/", params[1])
+
+	res, err := config.pokeapiClient.GetPokemon(config.pokeCache, &URL)
+
+	if err != nil {
+		return err
+	}
+
+	if rand.Float64()*float64(res.BaseExperience) > float64(res.BaseExperience)/2 {
+		fmt.Printf("You caught %v!\n", res.Name)
+		config.pokedex[res.Name] = res
+	} else {
+		fmt.Printf("Drats! The %v got away!\n", res.Name)
 	}
 
 	return nil
