@@ -43,6 +43,11 @@ func getCommands() map[string]cliCommand {
 			description: "Displays the previous 20 location areas in the Pokemon world",
 			callback:    callbackMapb,
 		},
+		"explore": {
+			name:        "explore",
+			description: "Displays the available Pokemon in the given area",
+			callback:    callbackExplore,
+		},
 	}
 }
 
@@ -107,6 +112,33 @@ func callbackMapb(config *config, params []string) error {
 
 	config.nextAreaURL = res.Next
 	config.prevAreaURL = res.Previous
+
+	return nil
+}
+
+func callbackExplore(config *config, params []string) error {
+	if len(params) == 1 {
+		fmt.Println("not enough arguments")
+		return nil
+	}
+
+	URL := fmt.Sprintf("https://pokeapi.co/api/v2/location-area/%s/", params[1])
+
+	res, err := config.pokeapiClient.ListPokemonEncounters(config.pokeCache, &URL)
+
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	if len(res.PokemonEncounters) == 0 {
+		fmt.Println("no Pokemon in this area")
+		return nil
+	}
+
+	for _, encounter := range res.PokemonEncounters {
+		fmt.Println(encounter.Pokemon.Name)
+	}
 
 	return nil
 }

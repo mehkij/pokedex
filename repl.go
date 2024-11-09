@@ -18,10 +18,10 @@ func startRepl(cnfg *config) {
 		slice := strings.Fields(text)
 
 		c := getCommands()
-		_, ok := c[text]
+		_, ok := c[slice[0]]
 
 		if ok {
-			c[slice[0]].callback(cnfg, slice[1:])
+			c[slice[0]].callback(cnfg, slice)
 		} else {
 			fmt.Println("error: unknown command")
 		}
