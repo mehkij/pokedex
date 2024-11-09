@@ -11,6 +11,7 @@ func main() {
 	cnfig := config{
 		pokeapiClient: pokeapi.NewClient(),
 		pokeCache:     pokecache.NewCache(time.Second * 5),
+		pokedex:       map[string]pokeapi.PokemonRes{},
 	}
 
 	startRepl(&cnfig)
