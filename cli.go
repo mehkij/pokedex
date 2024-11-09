@@ -60,6 +60,11 @@ func getCommands() map[string]cliCommand {
 			description: "Inspect a Pokemon you have caught previously",
 			callback:    callbackInspect,
 		},
+		"pokedex": {
+			name:        "pokedex",
+			description: "Lists the Pokemon you have caught",
+			callback:    callbackPokedex,
+		},
 	}
 }
 
@@ -212,6 +217,24 @@ func callbackInspect(config *config, params []string) error {
 		}
 	} else {
 		fmt.Println("You have not caught this Pokemon yet!")
+	}
+
+	return nil
+}
+
+func callbackPokedex(config *config, params []string) error {
+	if len(params) > 1 {
+		fmt.Println("too many arguments")
+		return nil
+	}
+
+	if len(config.pokedex) == 0 {
+		fmt.Println("You haven't caught any Pokemon yet!")
+		return nil
+	}
+
+	for _, pokemon := range config.pokedex {
+		fmt.Printf("- %s\n", pokemon.Name)
 	}
 
 	return nil
